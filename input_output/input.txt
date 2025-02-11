@@ -1,0 +1,10 @@
+AB + C -
+ABC +-
+AB -C + DEF -+^
+ABCDE -+ ^*EF*-
+
+++A-*^BCD/+EF*GHI 
++-^ABC*D**EFG
+
+(A + B) * (C ^(D-E) + F) - G
+A + (((B-C) * (D-E) + F)/G) ^ (H-J)

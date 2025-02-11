@@ -1,0 +1,72 @@
+===========================================================
+Input String:	   AB+C-
+
+Input String Type: postfix
+
+Infix version:	((A+B)-C)
+Prefix version:	-+ABC
+===========================================================
+
+===========================================================
+Input String:	   ABC+-
+
+Input String Type: postfix
+
+Infix version:	(A-(B+C))
+Prefix version:	-A+BC
+===========================================================
+
+===========================================================
+Input String:	   AB-C+DEF-+^
+
+Input String Type: postfix
+
+Infix version:	(((A-B)+C)^(D+(E-F)))
+Prefix version:	^+-ABC+D-EF
+===========================================================
+
+===========================================================
+Input String:	   ABCDE-+^*EF*-
+
+Input String Type: postfix
+
+Infix version:	((A*(B^(C+(D-E))))-(E*F))
+Prefix version:	-*A^B+C-DE*EF
+===========================================================
+
+===========================================================
+Input String:	   ++A-*^BCD/+EF*GHI
+
+Input String Type: prefix
+
+Infix version:	 ((A+(((B^C)*D)-((E+F)/(G*H))))+I)
+Postfix version: ABC^D*EF+GH*/-+I+
+===========================================================
+
+===========================================================
+Input String:	   +-^ABC*D**EFG
+
+Input String Type: prefix
+
+Infix version:	 (((A^B)-C)+(D*((E*F)*G)))
+Postfix version: AB^C-DEF*G**+
+===========================================================
+
+===========================================================
+Input String:	   (A+B)*(C^(D-E)+F)-G
+
+Input String Type: infix
+
+Prefix version:	-*+AB+^C-DEFG
+Postfix version:	GFED-C^+BA+*-
+===========================================================
+
+===========================================================
+Input String:	   A+(((B-C)*(D-E)+F)/G)^(H-J)
+
+Input String Type: infix
+
+Prefix version:	+A^/+*-BC-DEFG-HJ
+Postfix version:	JH-GFED-CB-*+/^A+
+===========================================================
+
