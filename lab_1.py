@@ -8,7 +8,12 @@ This file includes various functions to convert string expressions from:
     - Prefix to Infix notation
     - Postfix to Infix notation
 
-Also included is a bonus function to convert Infix to Postfix notation that is used to do Infix to Prefix. 
+Also included are other functions:
+    - Infix to Postfix notation 
+    - check_parentheses
+    - determine_type
+    - log_error
+    - convert expression 
 """
 
 from ArrayStack import ArrayStack
@@ -327,7 +332,6 @@ def convert_expression(input_string:str, output_file) -> None:
     total_time = stop_time - start_time
     print(f"\nTotal time taken to convert: {total_time*1000000:.4g} microseconds.", file=output_file)
     print("===========================================================\n", file=output_file)
-
 
 
 def log_error(e:Exception, output_file) -> None:
