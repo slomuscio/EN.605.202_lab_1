@@ -12,6 +12,7 @@ Also included is a bonus function to convert Infix to Postfix notation that is u
 """
 
 from ArrayStack import ArrayStack
+import time 
 
 def check_parentheses(input_string:str) -> bool:
     """Checkes whether the expression has matched sets of opening and closing delimeters. 
@@ -128,20 +129,20 @@ def postfix_to_prefix(input_string: str) -> str:
     return stack.pop()
 
 
-def infix_to_postfix(input_string:str) -> str:
-    """Converts expression from infix to postfix. 
+def infix_to_prefix(input_string:str) -> str:
+    """Converts expression from infix to prefix. 
     Time Complexity: O(n)   for loop to reverse and another to parse string; __not__ nested for loops.
     Space Complexity: O(n)  list for storage in stack 
 
     Args:
-        input_string (str): _description_
+        input_string (str): Input string in infix notation. 
 
     Returns:
-        str: _description_
+        str: Output string in prefix notation. 
     """
     # Check that the infix expression is balanced first 
     if not check_parentheses(input_string):
-        return 
+        raise Exception("Mismatched parentheses.")
 
     stack = ArrayStack()
     operators = ['*', '/', '+', '-', '^']
@@ -183,21 +184,54 @@ def infix_to_postfix(input_string:str) -> str:
     while not stack.is_empty():
         output_string += stack.pop()  # Append remaining operators to the string 
 
-    return output_string
+    return output_string[::-1]
 
 
-def infix_to_prefix(input_string:str) -> str:
-    """Converts expression from infix to prefix. 
+def infix_to_postfix(input_string:str) -> str:
+    """EXTRA FUNCTION - ENHANCEMENT :)
+    Converts expression from infix to postfix. 
 
     Args:
         input_string (str): Input string in infix notation. 
 
     Returns:
-        str: Output string in prefix notation. 
+        str: Output string in postfix notation. 
     """
-    # Converts expression from infix notation to prefix notation 
-    return infix_to_postfix(input_string)[::-1]
+    # Check that the infix expression is balanced first 
+    if not check_parentheses(input_string):
+        raise Exception("Mismatched parentheses.")
+    
+    stack = ArrayStack()
+    operators = ['*', '/', '+', '-', '^']
+    prescedence = {'+': 1, '-': 1, '*':2, '/':2, '^':3}
+    output_string = ''
 
+    for character in input_string:
+
+        if character.isalnum() == True:
+            output_string += character  # Append values to string that are not operators or parenthesis
+
+        elif character == '(':
+            stack.push(character)  # Push open parentheses to stack
+
+        elif character == ')': 
+            while (not stack.is_empty()):
+                if stack.peek() == '(':
+                    stack.pop()
+                    break
+                output_string += stack.pop() 
+
+        elif character in prescedence:
+            # stack.push(character)
+            while (not stack.is_empty()) and (stack.peek() != '(') and (prescedence[character] <= prescedence[stack.peek()]):
+                output_string += stack.pop()  # Append higher prescedence operators to string compared to current operator
+            stack.push(character)
+
+    while not stack.is_empty():
+        output_string += stack.pop()  # Append remaining operators to the string 
+
+    return output_string
+    
 
 def prefix_to_infix(input_string:str) -> str:
     """Converts expression from prefix notation to infix notation.
@@ -259,13 +293,14 @@ def postfix_to_infix(input_string: str) -> str:
     return stack.pop()
 
 
-def convert_expression(input_string:str, output_file):
+def convert_expression(input_string:str, output_file) -> None:
     """Wrapper function that takes input string, determines if it is prefix, postfix, or infix, then calls the appropriate conversion function to convert the input string to either prefix, postfix, or infix. Also, it writes the input string, the input string expressiont type, and the conversions to an output text file. 
 
     Args:
         input_string (str): Input string to convert. 
-        output_file (_type_): Output file to write to. 
+        output_file (): File-like object to write output to. 
     """
+    start_time = time.time()
     print("===========================================================", file=output_file)
     print(f"Input String:\t   {input_string}\n", file=output_file)
     expression_type = determine_type(input_string)
@@ -286,24 +321,41 @@ def convert_expression(input_string:str, output_file):
     elif expression_type == "infix":
         prefix = infix_to_prefix(input_string)
         postfix = infix_to_postfix(input_string)
-        print(f"Prefix version:\t{prefix}", file=output_file)
+        print(f"Prefix version:\t\t{prefix}", file=output_file)
         print(f"Postfix version:\t{postfix}", file=output_file)
+    stop_time = time.time()
+    total_time = stop_time - start_time
+    print(f"\nTotal time taken to convert: {total_time*1000000:.4g} microseconds.", file=output_file)
+    print("===========================================================\n", file=output_file)
+
+
+
+def log_error(e:Exception, output_file) -> None:
+    """Logs error to the output text file. 
+
+    Args:
+        e (Exception): Exception thrown.
+        output_file (): File-like object to write output to. 
+    """
+    print(f"Error in expression:", file=output_file)
+    print(f"\t\t{e}", file=output_file)
     print("===========================================================\n", file=output_file)
 
 
 def main():
+    """Main function to convert expressions to/from infix, prefix, and postfix notation. 
+    """
     import os
 
     current_file_path = os.path.dirname(os.path.abspath(__file__))  # Find the path to this file.
     os.chdir(current_file_path)  # cd to the directory containing this file.
 
-    print(current_file_path)
     input_file = os.path.join(current_file_path, "input_output", "input.txt")
     output_file = os.path.join(current_file_path, "input_output", "output.txt")
 
     
-    with open(input_file, 'r') as f:
-        with open(output_file, 'w') as output_f:
+    with open(input_file, 'r') as f:  # Open input text file containing input cases.
+        with open(output_file, 'w') as output_f:  # Open output file to write output to. 
 
             for line in f:  # Loop through each line in the input text file. Each line is an input string. 
                 input_string = line.strip().replace(" ", "")  # Remove all spaces from input strings.
@@ -311,8 +363,10 @@ def main():
                 if len(input_string) == 0:  # Skip empty lines in the file.
                     continue
                 
-                convert_expression(input_string, output_f)  # Determine the format of the string, and convert. Write output to output.txt. 
-
+                try:
+                    convert_expression(input_string, output_f)  # Determine format of string, & convert. Write output to file.
+                except Exception as e:
+                    log_error(e, output_f)
 
 if __name__=="__main__":
     main()
